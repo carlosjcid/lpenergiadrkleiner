@@ -596,13 +596,10 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
 </script>
 
 <!-- ================================================================= -->
-<!-- SCRIPT DE RASTREAMENTO DE CONVERSÃO WHATSAPP (GA4 + META + GTM + GOOGLE ADS) -->
+<!-- SCRIPT DE RASTREAMENTO CORRIGIDO: GOOGLE ADS + GA4 + META         -->
 <!-- ================================================================= -->
 <script>
 (function() {
-
-  var ADS_CONVERSION_LABEL = 'AW-9545679095/7738770452';
-
   function getSectionName(link) {
     var text = (link.textContent || '').trim().toLowerCase();
     if (text.includes('longevidade'))    return 'hero';
@@ -619,47 +616,32 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
   }
 
   document.addEventListener('click', function(e) {
-    var link = e.target.closest(
-      'a[href*="api.whatsapp.com"], a[href*="wa.me"]'
-    );
+    var link = e.target.closest('a[href*="api.whatsapp.com"], a[href*="wa.me"]');
     if (!link) return;
 
     var section = getSectionName(link);
-    var url     = link.getAttribute('href') || '';
 
-    // GA4
-    if (typeof gtag === 'function') {
-      gtag('event', 'lead_whatsapp', {
-        event_category: 'conversao',
-        event_label:    section,
-        page_location:  window.location.href
-      });
-    }
-
-    // Google Ads — Clique_WhatsApp_Energia (AW-9545679095)
+    // 1. DISPARO OFICIAL PARA O GOOGLE ADS (Resolve o erro da tela)
     if (typeof gtag === 'function') {
       gtag('event', 'conversion', {
-        send_to:     ADS_CONVERSION_LABEL,
-        event_label: 'whatsapp_' + section
+        'send_to': 'AW-18341108944/Ob26CJSIkeocENC53KIE',
+        'event_category': 'Contato',
+        'event_label': section
+      });
+
+      // 2. Disparo para o Google Analytics 4
+      gtag('event', 'lead_whatsapp', {
+        'event_category': 'conversao',
+        'event_label': section
       });
     }
 
-    // Meta Pixel
+    // 3. Disparo no Meta Pixel
     if (typeof fbq === 'function') {
       fbq('track', 'Lead', {
         content_name: 'whatsapp_' + section
       });
     }
-
-    // DataLayer / GTM
-    if (typeof dataLayer !== 'undefined') {
-      dataLayer.push({
-        event:       'lead_whatsapp',
-        cta_section: section,
-        cta_url:     url
-      });
-    }
   });
-
 })();
 </script>
