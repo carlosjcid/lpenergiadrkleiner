@@ -3,12 +3,14 @@
 <head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18341108944"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-9545679095"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'AW-18341108944');
+  gtag('config', 'AW-9545679095');
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -594,10 +596,12 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
 </script>
 
 <!-- ================================================================= -->
-<!-- SCRIPT DE RASTREAMENTO DE CONVERSÃO WHATSAPP (GA4 + META + GTM)  -->
+<!-- SCRIPT DE RASTREAMENTO DE CONVERSÃO WHATSAPP (GA4 + META + GTM + GOOGLE ADS) -->
 <!-- ================================================================= -->
 <script>
 (function() {
+
+  var ADS_CONVERSION_LABEL = 'AW-9545679095/7738770452';
 
   function getSectionName(link) {
     var text = (link.textContent || '').trim().toLowerCase();
@@ -623,7 +627,7 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
     var section = getSectionName(link);
     var url     = link.getAttribute('href') || '';
 
-    // Disparo no Google Analytics 4 (GA4)
+    // GA4
     if (typeof gtag === 'function') {
       gtag('event', 'lead_whatsapp', {
         event_category: 'conversao',
@@ -632,14 +636,22 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
       });
     }
 
-    // Disparo no Meta Pixel (Facebook Ads)
+    // Google Ads — Clique_WhatsApp_Energia (AW-9545679095)
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        send_to:     ADS_CONVERSION_LABEL,
+        event_label: 'whatsapp_' + section
+      });
+    }
+
+    // Meta Pixel
     if (typeof fbq === 'function') {
       fbq('track', 'Lead', {
         content_name: 'whatsapp_' + section
       });
     }
 
-    // Disparo no DataLayer (Google Tag Manager)
+    // DataLayer / GTM
     if (typeof dataLayer !== 'undefined') {
       dataLayer.push({
         event:       'lead_whatsapp',
@@ -651,13 +663,3 @@ src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1"
 
 })();
 </script>
-<script>
-(function(){
-  var els=document.querySelectorAll('.reveal');
-  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
-  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}})},{threshold:.25});
-  els.forEach(function(e){io.observe(e)});
-})();
-</script>
-</body>
-</html>
