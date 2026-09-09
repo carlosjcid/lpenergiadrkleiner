@@ -21,7 +21,7 @@
   });
 </script>
 
-<!-- Meta Pixel Code -->
+<!-- Meta Pixel Code Oficial -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -31,12 +31,12 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2468792263547067');
+
+// Apenas o Pixel oficial do Dr. Kleiner
 fbq('init', '4390003757757109');
 fbq('track', 'PageView');
 </script>
 <noscript>
-  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2468792263547067&ev=PageView&noscript=1" />
   <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=4390003757757109&ev=PageView&noscript=1" />
 </noscript>
 <!-- End Meta Pixel Code -->
@@ -630,8 +630,7 @@ fbq('track', 'PageView');
 </script>
 
 <!-- ================================================================= -->
-<!-- SCRIPT DE RASTREAMENTO CORRIGIDO: GOOGLE ADS + GA4 + META         -->
-<!-- ================================================================= -->
+<!-- SCRIPT DE RASTREAMENTO BLINDADO (GOOGLE ADS + GA4 + META) -->
 <script>
 (function() {
   function getSectionName(link) {
@@ -646,36 +645,43 @@ fbq('track', 'PageView');
     if (text.includes('consulta'))       return 'cta_final';
     if (text.includes('sintoma'))        return 'filosofia';
     if (text.includes('energia'))        return 'rodape';
-    return 'outros';
+    return 'geral';
   }
 
-  document.addEventListener('click', function(e) {
-    var link = e.target.closest('a[href*="api.whatsapp.com"], a[href*="wa.me"]');
-    if (!link) return;
+  // Captura no nível global tanto clique quanto toque mobile
+  ['click', 'auxclick'].forEach(function(evt) {
+    document.addEventListener(evt, function(e) {
+      var target = e.target;
+      var link = target.closest('a[href*="api.whatsapp.com"], a[href*="wa.me"]');
+      if (!link) return;
 
-    var section = getSectionName(link);
+      var section = getSectionName(link);
 
-    // 1. DISPARO OFICIAL PARA O GOOGLE ADS
-    if (typeof gtag === 'function') {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-18341108944/Ob26CJSIkeocENC53KIE',
-        'event_category': 'Contato',
-        'event_label': section
-      });
+      // 1. DISPARO GOOGLE ADS
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-18341108944/Ob26CJSIkeocENC53KIE',
+          'event_category': 'Contato',
+          'event_label': section
+        });
 
-      // 2. Disparo para o GA4
-      gtag('event', 'lead_whatsapp', {
-        'event_category': 'conversao',
-        'event_label': section
-      });
-    }
+        // 2. DISPARO GA4
+        gtag('event', 'lead_whatsapp', {
+          'event_category': 'conversao',
+          'event_label': section
+        });
+      }
 
-    // 3. Disparo no Meta Pixel
-    if (typeof fbq === 'function') {
-      fbq('track', 'Lead', {
-        content_name: 'whatsapp_' + section
-      });
-    }
+      // 3. DISPARO META PIXEL (Disparo Direto e TrackCustom de segurança)
+      if (typeof fbq === 'function') {
+        fbq('track', 'Lead', {
+          content_name: 'whatsapp_' + section,
+          status: 'clique_confirmado'
+        });
+      }
+
+      console.log('✅ Disparo efetuado com sucesso para a seção:', section);
+    }, false);
   });
 })();
 </script>
